@@ -12,7 +12,7 @@ app.use(cors());
 
 runSocket(server);
 
-app.use(express.json({ extended: true }));
+app.use(express.json({ extended: true, limit: "10mb" }));
 app.use("/api", require("./routes/api"));
 
 mongoose.connect(

@@ -11,8 +11,8 @@ const signUp = async (req, res) => {
     const errors = {};
 
     if (!isEmail(email + "")) errors.email = "email is invalid";
-    if (password + "".length < 8) errors.password = "password is too short";
-    if (name + "".length < 3) errors.name = "name is too short";
+    if ((password + "").length < 8) errors.password = "password is too short";
+    if ((name + "").length < 3) errors.name = "name is too short";
     if (Object.keys(errors).length > 0) return res.status(400).json(errors);
 
     try {
@@ -41,7 +41,7 @@ const signIn = async (req, res) => {
     const errors = {};
 
     if (!isEmail(email + "")) errors.email = "email is invalid";
-    if (password + "".length < 8) errors.password = "password is too short";
+    if ((password + "").length < 8) errors.password = "password is too short";
     if (Object.keys(errors).length > 0) return res.status(400).json(errors);
 
     try {

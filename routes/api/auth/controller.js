@@ -26,8 +26,8 @@ const signUp = async (req, res) => {
             password: hash,
         });
         await newUser.save();
-        const refreshToken = jwt.sign(newUser.transform(), secretKey, { expiresIn: "1h" });
-        const accessToken = jwt.sign({ id: newUser._id }, secretKey, { expiresIn: "365d" });
+        const accessToken = jwt.sign(newUser.transform(), secretKey, { expiresIn: "1h" });
+        const refreshToken = jwt.sign({ id: newUser._id }, secretKey, { expiresIn: "365d" });
 
         return res.status(201).json({ refreshToken, accessToken });
     } catch (error) {
@@ -51,8 +51,8 @@ const signIn = async (req, res) => {
         const isMatch = await user.comparePassword(password);
         if (!isMatch) return res.status(400).json({ password: "password is not correct" });
 
-        const refreshToken = jwt.sign(user.transform(), secretKey, { expiresIn: "1h" });
-        const accessToken = jwt.sign({ id: user._id }, secretKey, { expiresIn: "365d" });
+        const accessToken = jwt.sign(user.transform(), secretKey, { expiresIn: "1h" });
+        const refreshToken = jwt.sign({ id: user._id }, secretKey, { expiresIn: "365d" });
 
         return res.status(201).json({ refreshToken, accessToken });
     } catch (error) {
@@ -61,22 +61,22 @@ const signIn = async (req, res) => {
     }
 };
 
-const generateNewRefreshToken = async (req, res) => {
-    const { access_token: accessToken } = req.header;
+const generateNewAccessToken = async (req, res) => {
+    const { refresh_token: refreshToken } = req.header;
 
-    if (!accessToken) return res.status(401).json({ error: "access_token is required" });
+    if (!refreshToken) return res.status(401).json({ error: "refresh_token is required" });
 
     try {
-        const { id } = jwt.verify(accessToken, secretKey);
+        const { id } = jwt.verify(refreshToken, secretKey);
         const user = await User.findById(id);
 
-        const refreshToken = jwt.sign(user.transform(), secretKey, { expiresIn: "1h" });
+        const accessToken = jwt.sign(user.transform(), secretKey, { expiresIn: "1h" });
 
-        return res.status(200).json({ refreshToken });
+        return res.status(200).json({ accessToken });
     } catch (error) {
         console.log(error);
         return res.status(500).json(error);
     }
 };
 
-module.exports = { signUp, signIn, generateNewRefreshToken };
+module.exports = { signUp, signIn, generateNewAccessToken };

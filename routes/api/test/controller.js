@@ -72,8 +72,8 @@ const createTest = async (req, res) => {
     const { title, description, image, questions } = req.body;
     const errors = {};
 
-    if (title + "".length < 3) errors.title = "title is invalid";
-    if (description + "".length < 3) errors.description = "description is invalid";
+    if ((title + "").length < 3) errors.title = "title is invalid";
+    if ((description + "").length < 3) errors.description = "description is invalid";
     if (image && !isURL(image + "")) errors.image = "image is not URL";
     if (Array.isArray(questions)) {
         questions.forEach((ques) => {
@@ -118,8 +118,8 @@ const updateTest = async (req, res) => {
     const { title, description, image, questions } = req.body;
     const errors = {};
 
-    if (title + "".length < 3) errors.title = "title is invalid";
-    if (description + "".length < 3) errors.description = "description is invalid";
+    if ((title + "").length < 3) errors.title = "title is invalid";
+    if ((description + "").length < 3) errors.description = "description is invalid";
     if (image && !isURL(image + "")) errors.image = "image is not URL";
     if (Array.isArray(questions)) {
         const foundQuestions = await Question.find({ _id: { $in: questions } });

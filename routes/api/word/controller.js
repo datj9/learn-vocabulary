@@ -18,7 +18,7 @@ const createWord = async (req, res) => {
     const { text, image, meanings } = req.body;
     const errors = {};
 
-    if (text + "".length < 2) errors.text = "text is invalid";
+    if ((text + "").length < 2) errors.text = "text is invalid";
     if (image && !isURL(image + "")) errors.image = "image is invalid";
     if (!Array.isArray(meanings) || meanings.length == 0) errors.meanings = "meanings is invalid";
     if (Object.keys(errors).length > 0) return res.status(400).json(errors);
@@ -44,7 +44,7 @@ const updateWord = async (req, res) => {
     const { text, image, meanings } = req.body;
     const errors = {};
 
-    if (text + "".length < 2) errors.text = "text is invalid";
+    if ((text + "").length < 2) errors.text = "text is invalid";
     if (image && !isURL(image + "")) errors.image = "image is invalid";
     if (!Array.isArray(meanings) || meanings.length == 0) errors.meanings = "meanings is invalid";
     if (Object.keys(errors).length > 0) return res.status(400).json(errors);

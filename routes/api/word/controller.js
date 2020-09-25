@@ -2,7 +2,7 @@ const isURL = require("validator/lib/isURL");
 const { Word } = require("../../../models/Word");
 
 const getWordsByText = async (req, res) => {
-    const { text } = req.query;
+    const { text } = req.params;
 
     if (!text || typeof text != "string") return res.status(400).json({ text: "text is invalid" });
 
@@ -41,6 +41,7 @@ const createWord = async (req, res) => {
 };
 
 const updateWord = async (req, res) => {
+    const { text } = req.params;
     const { text, image, meanings } = req.body;
     const errors = {};
 

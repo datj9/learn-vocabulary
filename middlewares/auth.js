@@ -2,10 +2,10 @@ const jwt = require("jsonwebtoken");
 const { secretKey } = require("../config");
 
 const checkToken = (req, res, next) => {
-    const { refresh_token: refreshToken } = req.headers;
+    const { access_token: accessToken } = req.headers;
 
     try {
-        const user = jwt.verify(refreshToken, secretKey);
+        const user = jwt.verify(accessToken, secretKey);
         req.user = user;
         next();
     } catch (error) {
@@ -14,12 +14,12 @@ const checkToken = (req, res, next) => {
 };
 
 const authenticate = (req, res, next) => {
-    const { refresh_token: refreshToken } = req.headers;
+    const { access_token: accessToken } = req.headers;
 
-    if (!refreshToken) return res.status(401).json({ error: "refresh_token is required" });
+    if (!accessToken) return res.status(401).json({ error: "access_token is required" });
 
     try {
-        const user = jwt.verify(refreshToken, secretKey);
+        const user = jwt.verify(accessToken, secretKey);
         req.user = user;
 
         next();

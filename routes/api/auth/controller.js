@@ -54,7 +54,7 @@ const signIn = async (req, res) => {
         const accessToken = jwt.sign(user.transform(), secretKey, { expiresIn: "1h" });
         const refreshToken = jwt.sign({ id: user._id }, secretKey, { expiresIn: "365d" });
 
-        return res.status(201).json({ refreshToken, accessToken });
+        return res.status(200).json({ refreshToken, accessToken });
     } catch (error) {
         console.log(error);
         return res.status(500).json(error);

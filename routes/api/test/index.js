@@ -6,7 +6,7 @@ const { uploadSingle } = require("../../../middlewares/upload");
 router.get("/", checkToken, testController.getTests);
 router.get("/:testId", checkToken, testController.getTestById);
 router.post("/", authenticate, authorize(["admin"]), testController.createTest);
-router.post("/upload-image", uploadSingle("image"));
+router.post("/upload-image", authorize(["admin"]), uploadSingle("image"));
 router.put("/:testId", authenticate, authorize(["admin"]), testController.updateTest);
 router.patch("/:testId", authenticate, authorize(["admin"]), testController.updateIsPublicOfTest);
 

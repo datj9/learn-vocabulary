@@ -1,7 +1,10 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const isEmail = require("validator/lib/isEmail");
+const { promisify } = require("util");
 const { User } = require("../../../models/User");
 const { secretKey } = require("../../../config");
+const hashPass = promisify(bcrypt.hash);
 
 const signUp = async (req, res) => {
     const { email, password, name } = req.body;
@@ -16,7 +19,7 @@ const signUp = async (req, res) => {
         const user = await User.findOne({ email });
         if (user) return res.status(400).json({ email: "email already exists" });
 
-        const hash = await newUser.hashPassword(password + "");
+        const hash = await hashPass(password + "", 10);
         const newUser = new User({
             email,
             name: name + "",

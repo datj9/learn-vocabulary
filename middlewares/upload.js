@@ -42,7 +42,7 @@ const upload = multer({
 });
 
 const uploadSingle = (fieldName) => (req, res) => {
-    return upload.single(fieldName)(req, res, function (err) {
+    upload.single(fieldName)(req, res, function (err) {
         if (err instanceof multer.MulterError) {
             [("name", "storageErrors")].forEach((e) => delete err[e]);
             return res.status(400).json({ error: err });

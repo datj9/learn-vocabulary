@@ -41,7 +41,7 @@ const createWord = async (req, res) => {
 };
 
 const updateWord = async (req, res) => {
-    const { text } = req.params;
+    const { text: textSearch } = req.params;
     const { text, image, meanings } = req.body;
     const errors = {};
 
@@ -51,10 +51,10 @@ const updateWord = async (req, res) => {
     if (Object.keys(errors).length > 0) return res.status(400).json(errors);
 
     try {
-        const word = await Word.findOne({ text });
+        const word = await Word.findOne({ text: textSearch });
         if (!word) return res.status(404).json({ text: "word not found" });
 
-        await Word.updateOne({ word }, { text, image, meanings });
+        await Word.updateOne({ text: textSearch }, { text, image, meanings });
 
         return res.status(200).json({ isSuccess: true });
     } catch (error) {

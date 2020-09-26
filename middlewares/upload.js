@@ -24,7 +24,7 @@ const upload = multer({
         key: function (req, file, cb) {
             const fileAfterSplited = file.originalname.split(".");
             const fileType = fileAfterSplited[fileAfterSplited.length - 1];
-            cb(null, `/images/${uuidv4()}.${fileType}`);
+            cb(null, `images/${uuidv4()}.${fileType}`);
         },
     }),
     limits: {
@@ -33,7 +33,7 @@ const upload = multer({
     fileFilter: function (req, file, callback) {
         const ext = path.extname(file.originalname).toLowerCase();
 
-        if (ext !== ".png" && ext !== ".jpg" && ext !== ".jpeg") {
+        if (ext != ".png" && ext != ".jpg" && ext != ".jpeg" && ext != ".gif") {
             return callback(new Error("Only images are allowed"));
         }
 

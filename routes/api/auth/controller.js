@@ -62,7 +62,7 @@ const signIn = async (req, res) => {
 };
 
 const generateNewAccessToken = async (req, res) => {
-    const { refresh_token: refreshToken } = req.header;
+    const { refreshToken } = req.body;
 
     if (!refreshToken) return res.status(401).json({ error: "refresh_token is required" });
 

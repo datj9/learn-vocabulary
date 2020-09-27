@@ -63,7 +63,7 @@ const getTestById = async (req, res) => {
                 .map((ques) => ques.word._id);
 
             const savedWords = await SavedWord.find().where("user").eq(user.id).where("word").in(idOfWordsInQuestions);
-            const idOfSavedWords = savedWords.map((word) => word._id);
+            const idOfSavedWords = savedWords.map((savedWord) => savedWord.word);
 
             if (foundResult) {
                 return res

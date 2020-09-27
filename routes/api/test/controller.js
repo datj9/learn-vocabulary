@@ -5,6 +5,7 @@ const ObjectId = require("mongoose").Types.ObjectId;
 const { Test } = require("../../../models/Test");
 const { Question } = require("../../../models/Question");
 const { Result } = require("../../../models/Result");
+const { SavedWord } = require("../../../models/SavedWord");
 
 const getTests = async (req, res) => {
     const {
@@ -48,17 +49,21 @@ const getTestById = async (req, res) => {
 
     try {
         const test = await Test.findOne(query);
+        const idOfQuestions = test.questions;
 
         if (!test) return res.status(404).json({ error: "Test not found" });
-        const questions = await Question.find().where("_id").in(test.questions).populate("word");
-        questions.forEach((question, i) => (questions[i] = question.transform()));
+
+        const questions = await Question.find().where("_id").in(idOfQuestions).populate("word");
         test.questions = questions;
 
         if (user) {
             const foundResult = await Result.findOne({ user: user.id, test: test._id });
-
+            const idOfWordsInQuestions = questions
+                .filter((ques) => (ques.word ? true : false))
+                .map((ques) => ques.word._id);
+            const savedWords = await SavedWord.find({ user: user.id, word: { $in: idOfWordsInQuestions } });
             if (foundResult) {
-                return res.status(200).json({ test: test.transform(), result: foundResult.transform() });
+                return res.status(200).json({ test: test.transform(), result: foundResult.transform(), savedWords });
             } else {
                 const records = [];
                 for (let i = 0; i < test.questions.length; i++) {
@@ -68,7 +73,7 @@ const getTestById = async (req, res) => {
 
                 await result.save();
 
-                return res.status(200).json({ test: test.transform(), result: result.transform() });
+                return res.status(200).json({ test: test.transform(), result: result.transform(), savedWords });
             }
         } else {
             return res.status(200).json({ test: test.transform(), result: {} });

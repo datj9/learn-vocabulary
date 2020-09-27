@@ -47,10 +47,11 @@ const getTestById = async (req, res) => {
     if (!ObjectId.isValid(testId + "")) return res.status(400).json({ error: "testId is invalid" });
 
     try {
-        const test = await Test.findOne(query).populate("questions");
+        const test = await Test.findOne(query);
 
         if (!test) return res.status(404).json({ error: "Test not found" });
         const questions = await Question.find().where("_id").in(test.questions).populate("word");
+        questions.forEach((question, i) => (questions[i] = question.transform()));
         test.questions = questions;
 
         if (user) {

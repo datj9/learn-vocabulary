@@ -13,13 +13,15 @@ const runSocket = (server) => {
             try {
                 const user = jwt.verify(accessToken, secretKey);
                 const newSavedWord = new SavedWord({
-                    user,
+                    user: user.id,
                     word,
                 });
                 await newSavedWord.save();
 
                 socket.emit("resNewSavedWord", { newSavedWord: newSavedWord.transform() });
-            } catch (error) {}
+            } catch (error) {
+                socket.emit("resNewSavedWord", error);
+            }
         });
         socket.on("getSavedWords", async function ({ accessToken }) {
             try {

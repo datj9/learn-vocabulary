@@ -30,7 +30,21 @@ const runSocket = (server) => {
 
                 savedWords.forEach((word, i) => (savedWords[i] = word.transform()));
                 socket.emit("resSavedWords", { savedWords });
-            } catch (error) {}
+            } catch (error) {
+                socket.emit("resSavedWords", error);
+            }
+        });
+        socket.on("saveResult", async function ({ indexOfQuestion, answer, test, accessToken }) {
+            try {
+                const user = jwt.verify(accessToken, secretKey);
+                const result = await Result.findOne({ user: user.id, test });
+
+                result.records[indexOfQuestion] = answer;
+                await result.save();
+                socket.emit("resSaveResult", { isSuccess: true });
+            } catch (error) {
+                socket.emit("resSaveResult", { isSuccess: false, ...error });
+            }
         });
     });
 };

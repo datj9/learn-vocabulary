@@ -40,7 +40,7 @@ const getTests = async (req, res) => {
 const getTestById = async (req, res) => {
     const {
         params: { testId },
-        query: { isClient },
+        query: { isClient, redo },
         user,
     } = req;
     const query = isClient == true ? { isPublic: true, _id: testId } : { _id: testId };
@@ -53,11 +53,15 @@ const getTestById = async (req, res) => {
 
         if (!test) return res.status(404).json({ error: "Test not found" });
 
+        if (redo == true && user) {
+            await Result.deleteOne({ user: user.id, test: test._id });
+        }
+
         const questions = await Question.find().where("_id").in(idOfQuestions).populate("word");
         test.questions = questions;
 
         if (user) {
-            const foundResult = await Result.findOne({ user: user.id, test: test._id });
+            const foundResult = redo ? null : await Result.findOne({ user: user.id, test: test._id });
             const idOfWordsInQuestions = questions
                 .filter((ques) => (ques.word ? true : false))
                 .map((ques) => ques.word._id);

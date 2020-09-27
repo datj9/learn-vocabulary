@@ -59,7 +59,11 @@ const getTestById = async (req, res) => {
             if (foundResult) {
                 return res.status(200).json({ test: test.transform(), result: foundResult.transform() });
             } else {
-                const result = new Result({ user: user.id, test: test._id });
+                const records = [];
+                for (let i = 0; i < test.questions.length; i++) {
+                    records.push(-1);
+                }
+                const result = new Result({ user: user.id, test: test._id, records });
 
                 await result.save();
 

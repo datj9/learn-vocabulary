@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const SaveWordSchema = new mongoose.Schema({
+const SavedWordSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
@@ -16,7 +16,7 @@ const SaveWordSchema = new mongoose.Schema({
     },
 });
 
-SaveWordSchema.methods = {
+SavedWordSchema.methods = {
     transform: function () {
         const obj = this.toObject();
 
@@ -28,9 +28,9 @@ SaveWordSchema.methods = {
     },
 };
 
-const SaveWord = new mongoose.model("SaveWord", SaveWordSchema);
+const SavedWord = new mongoose.model("SavedWord", SavedWordSchema);
 
 module.exports = {
-    SaveWordSchema,
-    SaveWord,
+    SavedWordSchema,
+    SavedWord,
 };

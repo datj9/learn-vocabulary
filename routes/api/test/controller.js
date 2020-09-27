@@ -48,21 +48,26 @@ const getTestById = async (req, res) => {
 
     try {
         const test = await Test.findOne(query).populate("questions");
-        const result = {};
+
         if (!test) return res.status(404).json({ error: "Test not found" });
         const questions = await Question.find().where("_id").in(test.questions).populate("word");
         test.questions = questions;
 
         if (user) {
-            result = await Result.findOne({ user: user.id, test: test._id });
+            const foundResult = await Result.findOne({ user: user.id, test: test._id });
+
+            if (foundResult) {
+                return res.status(200).json({ test: test.transform(), result: foundResult.transform() });
+            } else {
+                const result = new Result({ user: user.id, test: test._id });
+
+                await result.save();
+
+                return res.status(200).json({ test: test.transform(), result: result.transform() });
+            }
+        } else {
+            return res.status(200).json({ test: test.transform(), result: {} });
         }
-        if (Object.keys(result).length == 0 && user) {
-            result = new Result({ user: user.id, test: test._id });
-            await result.save();
-        }
-        return res
-            .status(200)
-            .json({ test: test.transform(), result: Object.keys(result).length > 0 ? result.transform() : result });
     } catch (error) {
         return res.status(500).json(error);
     }

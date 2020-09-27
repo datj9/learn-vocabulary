@@ -62,16 +62,13 @@ const getTestById = async (req, res) => {
                 .filter((ques) => (ques.word ? true : false))
                 .map((ques) => ques.word._id);
 
-            const savedWords = await SavedWord.find()
-                .where("user")
-                .eq(user.id)
-                .where("word")
-                .in(idOfWordsInQuestions)
-                .map((word) => word._id);
-            console.log(savedWords);
+            const savedWords = await SavedWord.find().where("user").eq(user.id).where("word").in(idOfWordsInQuestions);
+            const idOfSavedWords = savedWords.map((word) => word._id);
 
             if (foundResult) {
-                return res.status(200).json({ test: test.transform(), result: foundResult.transform(), savedWords });
+                return res
+                    .status(200)
+                    .json({ test: test.transform(), result: foundResult.transform(), savedWords: idOfSavedWords });
             } else {
                 const records = [];
                 for (let i = 0; i < test.questions.length; i++) {
@@ -81,7 +78,9 @@ const getTestById = async (req, res) => {
 
                 await result.save();
 
-                return res.status(200).json({ test: test.transform(), result: result.transform(), savedWords });
+                return res
+                    .status(200)
+                    .json({ test: test.transform(), result: result.transform(), savedWords: idOfSavedWords });
             }
         } else {
             return res.status(200).json({ test: test.transform(), result: {} });

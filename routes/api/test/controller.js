@@ -62,9 +62,10 @@ const getTestById = async (req, res) => {
                 .filter((ques) => (ques.word ? true : false))
                 .map((ques) => ques.word._id);
             console.log(idOfWordsInQuestions);
-            const savedWords = await SavedWord.find({ user: user.id })
-                .filter((savedWord) => idOfWordsInQuestions.includes(savedWord.word))
-                .map((word) => word._id);
+            const savedWords = await SavedWord.find({ user: user.id });
+            console.log(savdWords);
+            // .filter((savedWord) => idOfWordsInQuestions.includes(savedWord.word))
+            // .map((word) => word._id);
             if (foundResult) {
                 return res.status(200).json({ test: test.transform(), result: foundResult.transform(), savedWords });
             } else {

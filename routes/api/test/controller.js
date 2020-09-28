@@ -21,11 +21,11 @@ const getTests = async (req, res) => {
 
         if (user) {
             const idOfTests = tests.map((t) => t._id);
-            results = await Result.find({ test: { $in: idOfTests } });
+            results = await Result.find({ user: user.id, test: { $in: idOfTests } });
         }
 
         results.forEach((result, i) => {
-            returnedResults[result._id] = result.transform();
+            returnedResults[result.test] = result.transform();
         });
         tests.forEach((test, i) => {
             tests[i] = test.transform();

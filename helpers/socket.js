@@ -1,4 +1,5 @@
 const { SavedWord } = require("../models/SavedWord");
+const { Result } = require("../models/Result");
 const socketIO = require("socket.io");
 const jwt = require("jsonwebtoken");
 const secretKey = process.env.SECRET_KEY;
@@ -40,7 +41,7 @@ const runSocket = (server) => {
                 const result = await Result.findOne({ user: user.id, test });
 
                 result.records[indexOfQuestion] = answer;
-                await result.save();
+                await Result.updateOne({ user: user.id, test }, { records: result.records });
                 socket.emit("resSaveResult", { isSuccess: true });
             } catch (error) {
                 socket.emit("resSaveResult", { isSuccess: false, ...error });
